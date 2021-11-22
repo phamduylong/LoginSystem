@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <fstream>
+#include <regex>
 
 //function take user input 
 int takeInput() {
@@ -36,15 +37,24 @@ void logIn(const std::unordered_map<std::string, std::string>& db) {
 }
 
 
-//register new user function
+//register new user function (added regex to validate input)
 void registerUser(std::unordered_map<std::string, std::string>& db) {
 	bool cf_match = true;
+	std::regex str_expr("[a-z]+");
 	std::string uname, pw, cfpw;
 	std::ofstream ofile("db.txt");
 	std::cout << "Desired username: " << std::endl;
 	std::getline(std::cin, uname);
+	if (!std::regex_match(uname, str_expr)) {
+		std::cout << "Invalid username! Please try again" << std::endl;
+		return;
+	}
 	std::cout << "Choose a password: " << std::endl;
 	std::getline(std::cin, pw);
+	if (!std::regex_match(uname, str_expr)) {
+		std::cout << "Invalid password! Please try again" << std::endl;
+		return;
+	}
 	std::cout << "Confirm password: " << std::endl;
 	std::getline(std::cin, cfpw);
 	auto find_it = db.find(uname);
