@@ -16,6 +16,10 @@ int takeInput() {
 
 //login function
 void logIn(const std::unordered_map<std::string, std::string>& db) {
+	if (db.size() == 0) {
+		std::cout << "No account registered. Please try signing up before logging in!" << std::endl;
+		return;
+	}
 	std::string uname, pw;
 	std::cout << "Username: " << std::endl;
 	std::getline(std::cin, uname);
@@ -40,20 +44,20 @@ void logIn(const std::unordered_map<std::string, std::string>& db) {
 //register new user function (added regex to validate input)
 void registerUser(std::unordered_map<std::string, std::string>& db) {
 	bool cf_match = true;
-	std::regex str_expr("[a-z]+");
-	std::string uname, pw, cfpw;
-	std::ofstream ofile("db.txt");
+	std::regex str_expr("[a-zA-Z0-9]+"); //input validation
+	std::string uname, pw, cfpw;    // username, password and confirm password
+	std::ofstream ofile("db.txt");  
 	std::cout << "Desired username: " << std::endl;
 	std::getline(std::cin, uname);
 	if (!std::regex_match(uname, str_expr)) {
 		std::cout << "Invalid username! Please try again" << std::endl;
-		return;
+		return;  //end the function if username doesn't match regex
 	}
 	std::cout << "Choose a password: " << std::endl;
 	std::getline(std::cin, pw);
-	if (!std::regex_match(uname, str_expr)) {
+	if (!std::regex_match(pw, str_expr)) {
 		std::cout << "Invalid password! Please try again" << std::endl;
-		return;
+		return;  //end function if password doesn't match regex
 	}
 	std::cout << "Confirm password: " << std::endl;
 	std::getline(std::cin, cfpw);
@@ -68,6 +72,8 @@ void registerUser(std::unordered_map<std::string, std::string>& db) {
 	if (find_it != db.end()) {
 		std::cout << "User already existed! Please try again with a different username!" << std::endl;
 	}
+
+
 	else if (cf_match) {
 		db.insert(std::make_pair(uname, pw));
 		std::ofstream ofile("db.txt");
